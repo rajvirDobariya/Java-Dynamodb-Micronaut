@@ -1,3 +1,7 @@
 dynamodb:
   host: localhost
   port: 8000
+
+
+aws:
+  region: 'local'

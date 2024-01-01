@@ -7,7 +7,7 @@ import jakarta.inject.Singleton;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
-@Requires(beans = {DynamoConfiguration.class, DynamoDbClient.class})
+@Requires(beans = {DynamoDbClient.class})
 @Singleton
 @Primary
 public class DynamoRepository {
