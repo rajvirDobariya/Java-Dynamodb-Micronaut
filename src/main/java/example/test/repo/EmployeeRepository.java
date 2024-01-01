@@ -5,18 +5,19 @@ import io.micronaut.context.annotation.Requires;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
-import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.*;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import java.util.List;
-import java.util.stream.Collectors;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
+import java.util.Optional;
 
 @Requires(beans = DynamoDbClient.class)
 @Singleton
@@ -85,7 +86,28 @@ public class EmployeeRepository {
         return employees;
     }
 
+    public Optional<Employee> updateEmployeeById(Employee updatedEmployee) {
 
+        UpdateItemEnhancedRequest<Employee> updateRequest = UpdateItemEnhancedRequest.builder(Employee.class)
+                .item(updatedEmployee)
+                .build();
+        employeeTable.updateItem(updateRequest);
+
+        return Optional.of(updatedEmployee);
+    }
+
+    public Optional<Employee> deleteEmployeeById(String empId, String sortKeyValue) {
+        Key key = Key.builder()
+                .partitionValue(empId)
+                .sortValue(sortKeyValue)
+                .build();
+        DeleteItemEnhancedRequest deleteRequest = DeleteItemEnhancedRequest.builder()
+                .key(key)
+                .build();
+        Employee deletedEmployee = employeeTable.deleteItem(deleteRequest);
+
+        return Optional.ofNullable(deletedEmployee);
+    }
     //            dynamoDbClient.createTable(CreateTableRequest.builder()
 //                    .attributeDefinitions(AttributeDefinition.builder()
 //                                .attributeName("emp_id")

@@ -41,4 +41,14 @@ public class EmployeeController {
     public Optional<Employee> getEmployeeById(@PathVariable String empId) {
         return employeeRepository.findByEmpId(empId);
     }
+
+    @Put
+    public Optional<Employee> updateEmployeeById(@Body Employee updatedEmployee) {
+        return employeeRepository.updateEmployeeById(updatedEmployee);
+    }
+
+    @Delete
+    public Optional<Employee> deleteEmployeeById(@QueryValue String empId, @QueryValue String sortKeyValue) {
+        return employeeRepository.deleteEmployeeById(empId,sortKeyValue);
+    }
 }
